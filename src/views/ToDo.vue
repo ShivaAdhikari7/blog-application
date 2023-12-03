@@ -253,6 +253,7 @@ export default {
     };
   },
   mounted() {
+    this.loadDataFromLocalStorage();
     this.$v.$reset();
   },
   validations: {
@@ -314,6 +315,15 @@ export default {
       this.isModalVisible = true;
       console.log("Showing modal");
     },
+    loadDataFromLocalStorage() {
+      const savedData = localStorage.getItem("form_data");
+      if (savedData) {
+        this.informations = JSON.parse(savedData);
+      }
+    },
+    saveDataToLocalStorage() {
+      localStorage.setItem("form_data", JSON.stringify(this.informations));
+    },
     closeModal() {
       this.isModalVisible = false;
       console.log("Closing modal");
@@ -324,6 +334,7 @@ export default {
         this.recordToDeleteIndex = null;
         this.clearForm();
         this.closeModal();
+        this.saveDataToLocalStorage();
       }
     },
     updateRecord(index) {
@@ -358,6 +369,7 @@ export default {
         this.clearForm(); // Clear the form fields
         this.isUpdating = false; // Reset the updating mode
         this.recordToEditIndex = null;
+        this.saveDataToLocalStorage();
       }
     },
     clearForm() {
@@ -388,7 +400,7 @@ export default {
           const formDataCopy = Object.assign({}, this.formData);
           this.informations.push(formDataCopy);
         }
-
+        this.saveDataToLocalStorage();
         this.clearForm();
       }
     }
