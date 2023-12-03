@@ -229,6 +229,9 @@ import { required, minLength } from "vuelidate/lib/validators";
 import Modal from "../components/Modal.vue";
 export default {
   name: "Todo",
+  components: {
+    Modal
+  },
 
   data() {
     return {
