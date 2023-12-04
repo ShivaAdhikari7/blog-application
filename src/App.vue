@@ -82,7 +82,8 @@ label {
 }
 
 input,
-select {
+select,
+textarea {
   border: none;
   border-radius: 0.5rem;
   font-family: inherit;
