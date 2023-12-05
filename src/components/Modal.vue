@@ -1,17 +1,13 @@
 <template>
   <div class="backdrop">
     <div class="modal">
-      <header class="modal-header">Confirm Deletion</header>
+      <slot class="modal-header" name="header"></slot>
+
       <form @submit.prevent>
-        <div class="modal-content">Are you sure you want to delete?</div>
+        <slot class="modal-content" name="main"></slot>
 
         <div class="modal-footer">
-          <button class="btn btn-danger btn-action" @click="close">
-            Cancel
-          </button>
-          <button class="btn btn-success btn-action" @click="confirm">
-            Confirm
-          </button>
+          <slot name="footer"></slot>
         </div>
       </form>
     </div>
@@ -19,16 +15,7 @@
 </template>
 <script>
 export default {
-  name: "Modal",
-  methods: {
-    close() {
-      this.$emit("close");
-    },
-    confirm() {
-      console.log("Deleting");
-      this.$emit("delete");
-    }
-  }
+  name: "Modal"
 };
 </script>
 <style>

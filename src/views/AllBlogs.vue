@@ -25,7 +25,7 @@
           <td class="btn-table">
             <button
               class="btn btn-primary btn-action"
-              @click="showUpdateModal(index)"
+              @click="showUpdateModal(index, data)"
             >
               Edit
             </button>
@@ -37,7 +37,43 @@
       </tbody>
     </table>
 
-    <Modal v-show="isModalVisible" @close="closeModal" @delete="deleteRecord" />
+    <Modal v-show="isModalVisible">
+      <template #header>
+        <h1 class="modal-header">Confirm Deletion</h1>
+      </template>
+
+      <template #main>
+        <p class="modal-content">Are you sure you want to delete?</p>
+      </template>
+
+      <template #footer>
+        <button class="btn btn-danger btn-action" @click="closeModal">
+          Cancel
+        </button>
+        <button class="btn btn-success btn-action" @click="deleteRecord">
+          Confirm
+        </button></template
+      >
+    </Modal>
+    <UpdateModal
+      :index="this.recordToUpdateIndex"
+      :data="blogData"
+      v-show="isUpdateModalVisible"
+    >
+      <template #header>
+        <h1 class="modal-header">Update Blog Data</h1>
+      </template>
+
+      <template #footer>
+        <button class="btn btn-danger btn-action" @click="closeModal">
+          Cancel
+        </button>
+        <button class="btn btn-success btn-action" @click="updateRecord">
+          Update
+        </button></template
+      >
+    </UpdateModal>
+
     <p v-if="data.length === 0" class="table-text">
       No any data to display. Please add some.
     </p>
@@ -46,10 +82,14 @@
 
 <script>
 import Modal from "../components/Modal.vue";
+import AddBlog from "./AddBlog.vue";
+import UpdateModal from "../components/UpdateModal.vue";
 export default {
   name: "AllBlogs",
   components: {
-    Modal
+    Modal,
+    AddBlog,
+    UpdateModal
   },
   data() {
     return {
@@ -58,12 +98,14 @@ export default {
       isModalVisible: false,
       isUpdateModalVisible: false,
       recordToDeleteIndex: null,
-      recordToUpdateIndex: null
+      recordToUpdateIndex: null,
+      blogData: {}
     };
   },
   mounted() {
     this.loadDataFromLocalStorage();
   },
+
   methods: {
     showModal(index) {
       console.log(index);
@@ -71,9 +113,16 @@ export default {
       this.isModalVisible = true;
       console.log("Showing modal");
     },
-    showUpdateModal(index) {
+    updateRecord() {
+      this.isUpdateModalVisible = false;
+      console.log(index);
+      console.log("Updating Record");
+    },
+    showUpdateModal(index, data) {
       this.recordToUpdateIndex = index;
       this.isUpdateModalVisible = true;
+      this.blogData = data;
+      // console.log(`Update Modal`, index, data);
     },
     closeModal() {
       this.isModalVisible = false;
@@ -84,7 +133,6 @@ export default {
       const savedData = localStorage.getItem("blog_data");
       if (savedData) {
         this.data = JSON.parse(savedData);
-        console.log(this.data);
       }
     },
     deleteRecord() {
@@ -102,4 +150,15 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.modal-header {
+  width: 100%;
+  padding: 1rem 0.5rem;
+  background: #2a006e;
+  color: white;
+}
+
+.modal-content {
+  padding: 1rem 0.5rem;
+}
+</style>
